@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import br.com.meta.projetoapimeta.model.request.SituacaoProcessoModelInputRequest;
-import br.com.meta.projetoapimeta.model.response.SituacaoProcessoModelResponse;
-import br.com.meta.projetoapimeta.persistence.entity.SituacaoProcesso;
+import br.com.meta.projetoapimeta.domain.dtos.request.SituacaoProcessoModelInputRequest;
+import br.com.meta.projetoapimeta.domain.dtos.response.SituacaoProcessoModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.SituacaoProcesso;
 import lombok.AllArgsConstructor;
 
 @Component

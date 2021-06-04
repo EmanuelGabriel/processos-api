@@ -2,8 +2,8 @@ package br.com.meta.projetoapimeta.service.mapper;
 
 import org.springframework.stereotype.Component;
 
-import br.com.meta.projetoapimeta.model.response.DocumentModelResponse;
-import br.com.meta.projetoapimeta.persistence.entity.Document;
+import br.com.meta.projetoapimeta.domain.dtos.response.DocumentModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.Document;
 import br.com.meta.projetoapimeta.service.exception.EntityNaoEncontradaException;
 
 @Component

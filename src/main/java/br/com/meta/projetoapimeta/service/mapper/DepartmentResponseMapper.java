@@ -2,8 +2,8 @@ package br.com.meta.projetoapimeta.service.mapper;
 
 import org.springframework.stereotype.Component;
 
-import br.com.meta.projetoapimeta.model.response.DepartmentModelResponse;
-import br.com.meta.projetoapimeta.persistence.entity.Department;
+import br.com.meta.projetoapimeta.domain.dtos.response.DepartmentModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.Department;
 
 @Component
 public class DepartmentResponseMapper implements Mapper<Department, DepartmentModelResponse> {

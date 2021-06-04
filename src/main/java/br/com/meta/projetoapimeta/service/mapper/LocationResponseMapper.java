@@ -2,8 +2,8 @@ package br.com.meta.projetoapimeta.service.mapper;
 
 import org.springframework.stereotype.Component;
 
-import br.com.meta.projetoapimeta.model.response.LocationModelResponse;
-import br.com.meta.projetoapimeta.persistence.entity.Location;
+import br.com.meta.projetoapimeta.domain.dtos.response.LocationModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.Location;
 
 @Component
 public class LocationResponseMapper implements Mapper<Location, LocationModelResponse> {

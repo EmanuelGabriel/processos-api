@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import br.com.meta.projetoapimeta.model.response.ProcessoModelResponse;
-import br.com.meta.projetoapimeta.persistence.entity.Processo;
+import br.com.meta.projetoapimeta.domain.dtos.response.ProcessoModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.Processo;
 import lombok.AllArgsConstructor;
 
 @Component
