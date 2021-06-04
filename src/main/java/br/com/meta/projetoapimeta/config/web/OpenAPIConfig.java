@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 
 @OpenAPIDefinition(
-		info = @Info(description = "API de gerenciamento e controle de documentos", 
+		info = @Info(description = "API de gerenciamento e controle de documentos processuais", 
 		termsOfService = "Termos de serviço",
 title = "Documentos - API", 
 version = "1.0.0", 
