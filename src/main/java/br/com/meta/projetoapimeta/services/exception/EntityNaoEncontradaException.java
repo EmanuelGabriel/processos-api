@@ -1,4 +1,4 @@
-package br.com.meta.projetoapimeta.service.exception;
+package br.com.meta.projetoapimeta.services.exception;
 
 public class EntityNaoEncontradaException extends RuntimeException {
 

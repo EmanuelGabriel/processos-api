@@ -9,7 +9,7 @@ import br.com.meta.projetoapimeta.domain.dtos.request.LocationModelInputRequest;
 import br.com.meta.projetoapimeta.domain.dtos.response.LocationModelResponse;
 import br.com.meta.projetoapimeta.domain.entity.Location;
 import br.com.meta.projetoapimeta.domain.repository.LocationRepository;
-import br.com.meta.projetoapimeta.service.mapper.Mapper;
+import br.com.meta.projetoapimeta.services.mapper.Mapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

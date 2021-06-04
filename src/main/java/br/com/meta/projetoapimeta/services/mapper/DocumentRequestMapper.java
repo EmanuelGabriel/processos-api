@@ -1,10 +1,10 @@
-package br.com.meta.projetoapimeta.service.mapper;
+package br.com.meta.projetoapimeta.services.mapper;
 
 import org.springframework.stereotype.Component;
 
 import br.com.meta.projetoapimeta.domain.dtos.request.DocumentModelInputRequest;
 import br.com.meta.projetoapimeta.domain.entity.Document;
-import br.com.meta.projetoapimeta.service.exception.EntityNaoEncontradaException;
+import br.com.meta.projetoapimeta.services.exception.EntityNaoEncontradaException;
 
 @Component
 public class DocumentRequestMapper implements Mapper<DocumentModelInputRequest, Document> {

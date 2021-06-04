@@ -11,8 +11,8 @@ import br.com.meta.projetoapimeta.domain.entity.Department;
 import br.com.meta.projetoapimeta.domain.entity.Location;
 import br.com.meta.projetoapimeta.domain.repository.DepartmentRepository;
 import br.com.meta.projetoapimeta.domain.repository.LocationRepository;
-import br.com.meta.projetoapimeta.service.exception.RegraNegocioException;
-import br.com.meta.projetoapimeta.service.mapper.Mapper;
+import br.com.meta.projetoapimeta.services.exception.RegraNegocioException;
+import br.com.meta.projetoapimeta.services.mapper.Mapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

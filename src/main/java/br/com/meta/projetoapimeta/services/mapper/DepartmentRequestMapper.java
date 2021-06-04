@@ -1,4 +1,4 @@
-package br.com.meta.projetoapimeta.service.mapper;
+package br.com.meta.projetoapimeta.services.mapper;
 
 import org.springframework.stereotype.Component;
 

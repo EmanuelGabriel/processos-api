@@ -16,8 +16,8 @@ import br.com.meta.projetoapimeta.domain.enumerator.TipoSituacao;
 import br.com.meta.projetoapimeta.domain.mapper.DocumentMapper;
 import br.com.meta.projetoapimeta.domain.repository.DocumentRepository;
 import br.com.meta.projetoapimeta.domain.repository.specification.DocumentSpecifications;
-import br.com.meta.projetoapimeta.service.exception.RegraNegocioException;
-import br.com.meta.projetoapimeta.service.mapper.Mapper;
+import br.com.meta.projetoapimeta.services.exception.RegraNegocioException;
+import br.com.meta.projetoapimeta.services.mapper.Mapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

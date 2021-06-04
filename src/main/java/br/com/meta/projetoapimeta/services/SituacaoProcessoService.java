@@ -13,8 +13,8 @@ import br.com.meta.projetoapimeta.domain.dtos.response.SituacaoProcessoModelResp
 import br.com.meta.projetoapimeta.domain.entity.SituacaoProcesso;
 import br.com.meta.projetoapimeta.domain.mapper.SituacaoProcessoMapper;
 import br.com.meta.projetoapimeta.domain.repository.SituacaoProcessoRepository;
-import br.com.meta.projetoapimeta.service.exception.EntityNaoEncontradaException;
-import br.com.meta.projetoapimeta.service.exception.RegraNegocioException;
+import br.com.meta.projetoapimeta.services.exception.EntityNaoEncontradaException;
+import br.com.meta.projetoapimeta.services.exception.RegraNegocioException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

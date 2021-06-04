@@ -20,7 +20,7 @@ import br.com.meta.projetoapimeta.domain.enumerator.FaseProcesso;
 import br.com.meta.projetoapimeta.domain.mapper.ProcessoMapper;
 import br.com.meta.projetoapimeta.domain.repository.ProcessoRepository;
 import br.com.meta.projetoapimeta.domain.repository.SituacaoProcessoRepository;
-import br.com.meta.projetoapimeta.service.exception.EntityNaoEncontradaException;
+import br.com.meta.projetoapimeta.services.exception.EntityNaoEncontradaException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
