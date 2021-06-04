@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.meta.projetoapimeta.domain.dtos.request.ProcessoModelInputRequest;
 import br.com.meta.projetoapimeta.domain.dtos.response.ProcessoModelResponse;
+import br.com.meta.projetoapimeta.resources.ProcessoResourceService;
 import br.com.meta.projetoapimeta.services.ProcessoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -29,12 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/v1/processos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProcessoResourceImpl {
+public class ProcessoResourceImpl implements ProcessoResourceService {
 
 	private ProcessoService processoService;
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
+	@Override
 	public ResponseEntity<ProcessoModelResponse> criar(@RequestBody ProcessoModelInputRequest request) {
 		log.info("POST /v1/processos {}", request);
 		ProcessoModelResponse response = this.processoService.criar(request);
@@ -43,16 +45,26 @@ public class ProcessoResourceImpl {
 	}
 
 	@GetMapping
-	public ResponseEntity<Page<ProcessoModelResponse>> getAllProcessos() {
+	@Override
+	public ResponseEntity<Page<ProcessoModelResponse>> getAll() {
 		log.info("GET /v1/processos");
 		Page<ProcessoModelResponse> processos = this.processoService.getAll();
 		return processos != null ? ResponseEntity.ok(processos) : ResponseEntity.ok().build();
 	}
 
 	@GetMapping(value = "{idProcesso}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
 	public ResponseEntity<ProcessoModelResponse> buscarPorId(@PathVariable Long idProcesso) {
 		log.info("GET /v1/processos/{} ", idProcesso);
 		return ResponseEntity.ok(this.processoService.buscarPorId(idProcesso));
+	}
+
+	@GetMapping(value = "{numeroProtocolo}/protocolo")
+	public ResponseEntity<ProcessoModelResponse> buscarProcessoNumeroProtocolo(@PathVariable Integer numeroProtocolo) {
+		log.info("GET /v1/processos/{}/protocolo", numeroProtocolo);
+		ProcessoModelResponse numeroProtocoloProcesso = this.processoService.buscarPorNumeroProtocolo(numeroProtocolo);
+		return numeroProtocoloProcesso != null ? ResponseEntity.ok(numeroProtocoloProcesso)
+				: ResponseEntity.notFound().build();
 	}
 
 	private URI getUri(Long id) {

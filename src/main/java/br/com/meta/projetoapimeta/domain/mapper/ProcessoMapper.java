@@ -22,8 +22,8 @@ public class ProcessoMapper {
 	/**
 	 * Converte uma entidade para um DTO
 	 * 
-	 * @param processo
-	 * @return
+	 * @param Recebe como parâmetro um Objeto do tipo 'Processo'
+	 * @return Objeto do tipo 'ProcessoModelResponse'
 	 */
 	public ProcessoModelResponse entityToDTO(Processo processo) {
 		return this.modelMapper.map(processo, ProcessoModelResponse.class);

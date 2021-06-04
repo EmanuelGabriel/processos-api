@@ -77,6 +77,15 @@ public class ProcessoService {
 		return this.processoMapper.mapEntityPageToDTO(pageable, pageProcesso);
 	}
 
+	public ProcessoModelResponse buscarPorNumeroProtocolo(Integer numeroProtocolo) {
+		log.info("Busca um processo por seu número de protocolo {}", numeroProtocolo);
+		Processo processo = this.processoRepository.findByNumeroProtocolo(numeroProtocolo);
+		if (processo == null) {
+			throw new EntityNaoEncontradaException("Número de protocolo do processo não encontrado");
+		}
+		return this.processoMapper.entityToDTO(processo);
+	}
+
 	@Transactional
 	public void remover(Long idProcesso) {
 		log.info("Remover processo de ID", idProcesso);

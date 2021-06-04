@@ -20,8 +20,6 @@ public class ProcessoModelInputRequest {
 
 	private String cpf;
 
-	private String faseInicial;
-
 	private SituacaoProcessoModelCodigoResponse situacaoProcesso;
 
 }
