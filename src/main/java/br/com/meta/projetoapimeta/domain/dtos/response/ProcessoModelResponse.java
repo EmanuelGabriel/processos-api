@@ -25,7 +25,7 @@ public class ProcessoModelResponse {
 
 	private String cpf;
 
-	private String faseInicial;
+	private String faseProcessual;
 
 	private SituacaoProcessoModelResponse situacaoProcesso;
 

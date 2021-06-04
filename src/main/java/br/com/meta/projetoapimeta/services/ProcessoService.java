@@ -48,7 +48,7 @@ public class ProcessoService {
 		processo.setCpf(request.getCpf());
 		processo.setDataInicioProcesso(LocalDateTime.now());
 		processo.setDataPrazoEstimado(LocalDateTime.now().plusDays(30));
-		processo.setFaseInicial(FaseProcesso.INICIAL);
+		processo.setFaseProcessual(FaseProcesso.INICIAL);
 		processo.setNumeroProcessoSei(request.getNumeroProcessoSei());
 		processo.setNumeroProtocolo(request.getNumeroProtocolo());
 		processo.setDataAtualizacaoProcesso(LocalDateTime.now());

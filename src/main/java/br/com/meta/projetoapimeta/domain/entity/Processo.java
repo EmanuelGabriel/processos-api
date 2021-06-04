@@ -57,9 +57,9 @@ public class Processo implements Serializable {
 	@Column(name = "nu_cpflogado", nullable = false, length = 11)
 	private String cpf;
 
-	@Column(name = "ds_faseinicial")
+	@Column(name = "ds_faseProcessual")
 	@Enumerated(EnumType.STRING)
-	private FaseProcesso faseInicial;
+	private FaseProcesso faseProcessual;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "fk_situacao", nullable = false)
