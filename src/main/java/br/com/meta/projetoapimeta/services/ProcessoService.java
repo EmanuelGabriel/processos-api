@@ -71,9 +71,9 @@ public class ProcessoService {
 				Sort.by("id").ascending().and(Sort.by("dataInicioProcesso").ascending()));
 		Page<Processo> pageProcesso = this.processoRepository.findAll(pageable);
 		log.info(
-				"Busca todos os processos com dados paginados -  total de elementos: {} - Quantidade {}: - Número de elementos: {} - size: {} - TotalPages: {}",
-				pageProcesso.getTotalElements(), pageProcesso.getNumber(), pageProcesso.getNumberOfElements(),
-				pageProcesso.getSize(), pageProcesso.getTotalPages());
+				"Busca todos os processos com dados paginados -  total de elementos: {} - Número de elementos: {} - size: {} - TotalPages: {}",
+				pageProcesso.getTotalElements(), pageProcesso.getNumberOfElements(), pageProcesso.getSize(),
+				pageProcesso.getTotalPages());
 		return this.processoMapper.mapEntityPageToDTO(pageable, pageProcesso);
 	}
 
