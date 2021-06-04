@@ -1,12 +1,15 @@
 package br.com.meta.projetoapimeta.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.meta.projetoapimeta.domain.mapper.ProcessoMapper;
@@ -34,12 +37,13 @@ public class ProcessoService {
 	@Transactional
 	public ProcessoModelResponse criar(ProcessoModelInputRequest request) {
 		log.info("Criar um processo {}", request);
-		
-		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository.findById(request.getSituacaoProcesso().getId());
-		if(!situacaoProcessoId.isPresent()) {
+
+		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository
+				.findById(request.getSituacaoProcesso().getId());
+		if (!situacaoProcessoId.isPresent()) {
 			throw new EntityNaoEncontradaException("Situação do processo não encontrada");
 		}
-		
+
 		Processo processo = new Processo();
 		processo.setCpf(request.getCpf());
 		processo.setDataInicioProcesso(LocalDateTime.now());
@@ -49,7 +53,7 @@ public class ProcessoService {
 		processo.setNumeroProtocolo(request.getNumeroProtocolo());
 		processo.setDataAtualizacaoProcesso(LocalDateTime.now());
 		processo.setSituacaoProcesso(situacaoProcessoId.get());
-		
+
 		return this.processoMapper.entityToDTO(this.processoRepository.saveAndFlush(processo));
 	}
 
@@ -62,9 +66,15 @@ public class ProcessoService {
 		return this.processoMapper.entityToDTO(processoOpt.get());
 	}
 
-	public List<ProcessoModelResponse> getAll() {
-		log.info("Busca todos os processos cadastrados");
-		return this.processoMapper.listEntityToDTO(this.processoRepository.findAll());
+	public Page<ProcessoModelResponse> getAll() {
+		Pageable pageable = PageRequest.of(0, 10,
+				Sort.by("id").ascending().and(Sort.by("dataInicioProcesso").ascending()));
+		Page<Processo> pageProcesso = this.processoRepository.findAll(pageable);
+		log.info(
+				"Busca todos os processos com dados paginados -  total de elementos: {} - Quantidade {}: - Número de elementos: {} - size: {} - TotalPages: {}",
+				pageProcesso.getTotalElements(), pageProcesso.getNumber(), pageProcesso.getNumberOfElements(),
+				pageProcesso.getSize(), pageProcesso.getTotalPages());
+		return this.processoMapper.mapEntityPageToDTO(pageable, pageProcesso);
 	}
 
 	@Transactional

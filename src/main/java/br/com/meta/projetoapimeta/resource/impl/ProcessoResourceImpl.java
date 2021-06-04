@@ -1,7 +1,6 @@
 package br.com.meta.projetoapimeta.resource.impl;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +38,9 @@ public class ProcessoResourceImpl {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ProcessoModelResponse>> getAll() {
-		log.info("GET /v1/processos");
-		List<ProcessoModelResponse> processos = this.processoService.getAll();
+	public ResponseEntity<Page<ProcessoModelResponse>> getAllProcessos() {
+		log.info("GET /v1/processos/listar");
+		Page<ProcessoModelResponse> processos = this.processoService.getAll();
 		return processos != null ? ResponseEntity.ok(processos) : ResponseEntity.ok().build();
 	}
 

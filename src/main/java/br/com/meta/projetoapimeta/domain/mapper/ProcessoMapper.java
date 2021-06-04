@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import br.com.meta.projetoapimeta.model.response.ProcessoModelResponse;
@@ -18,6 +21,7 @@ public class ProcessoMapper {
 
 	/**
 	 * Converte uma entidade para um DTO
+	 * 
 	 * @param processo
 	 * @return
 	 */
@@ -33,4 +37,12 @@ public class ProcessoMapper {
 		return processos.stream().map(this::entityToDTO).collect(Collectors.toList());
 	}
 
+	public List<ProcessoModelResponse> mapPageDTO(Page<Processo> processos) {
+		return processos.stream().map(this::entityToDTO).collect(Collectors.toList());
+	}
+
+	public Page<ProcessoModelResponse> mapEntityPageToDTO(Pageable pageable, Page<Processo> pageProcesso) {
+		List<ProcessoModelResponse> dtos = listEntityToDTO(pageProcesso.getContent());
+		return new PageImpl<>(dtos, pageable, pageProcesso.getTotalElements());
+	}
 }
