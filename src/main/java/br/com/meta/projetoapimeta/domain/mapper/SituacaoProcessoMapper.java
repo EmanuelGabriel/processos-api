@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import br.com.meta.projetoapimeta.domain.dtos.request.SituacaoProcessoModelInputRequest;
@@ -37,6 +40,11 @@ public class SituacaoProcessoMapper {
 
 	public List<SituacaoProcessoModelResponse> listEntityToDTO(List<SituacaoProcesso> situacoes) {
 		return situacoes.stream().map(this::entityToDTO).collect(Collectors.toList());
+	}
+	
+	public Page<SituacaoProcessoModelResponse> mapEntityPageToDTO(Pageable pageable, Page<SituacaoProcesso> pageSituacao){
+		List<SituacaoProcessoModelResponse> listDtos = listEntityToDTO(pageSituacao.getContent());
+		return new PageImpl<>(listDtos, pageable, pageSituacao.getTotalElements());
 	}
 
 }

@@ -1,10 +1,11 @@
 package br.com.meta.projetoapimeta.resources.impl;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +47,10 @@ public class SituacaoProcessoResourceImpl {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<SituacaoProcessoModelResponse>> getAll() {
-		log.info("GET /v1/situacao-processo");
-		List<SituacaoProcessoModelResponse> situacoes = this.situacaoProcessoService.getAll();
-		return situacoes != null ? ResponseEntity.ok(situacoes) : ResponseEntity.ok().build();
+	public ResponseEntity<Page<SituacaoProcessoModelResponse>> getAll(Pageable pageable) {
+		log.info("GET /v1/situacao-processo {}", pageable);
+		Page<SituacaoProcessoModelResponse> pageSituacao = this.situacaoProcessoService.getAll(pageable);
+		return pageSituacao != null ? ResponseEntity.ok(pageSituacao) : ResponseEntity.ok().build();
 	}
 
 	@GetMapping(value = "{idSituacao}", produces = MediaType.APPLICATION_JSON_VALUE)

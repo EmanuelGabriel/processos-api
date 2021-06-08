@@ -6,6 +6,10 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.meta.projetoapimeta.domain.dtos.request.SituacaoProcessoModelInputRequest;
@@ -40,10 +44,12 @@ public class SituacaoProcessoService {
 		return this.situacaoProcessoMapper.entityToDTO(this.situacaoProcessoRepository.saveAndFlush(situacaoProcesso));
 
 	}
-
-	public List<SituacaoProcessoModelResponse> getAll() {
-		log.info("Busca todas as situações dos processos");
-		return this.situacaoProcessoMapper.listEntityToDTO(this.situacaoProcessoRepository.findAll());
+	
+	public Page<SituacaoProcessoModelResponse> getAll(Pageable pageable){
+		// Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+		Page<SituacaoProcesso> pageSituacaoProcesso = this.situacaoProcessoRepository.findAll(pageable);
+		log.info("Busca todas as situações de um processo com paginação - total de elementos {} - total de páginas {}", pageSituacaoProcesso.getTotalElements(), pageSituacaoProcesso.getTotalPages());
+		return this.situacaoProcessoMapper.mapEntityPageToDTO(pageable, pageSituacaoProcesso);
 	}
 
 	public SituacaoProcessoModelResponse buscarPorId(Long idSituacao) {
