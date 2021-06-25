@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/v1/unidades-gestora", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/ugs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UnidadeGestoraResourceImpl implements UnidadeGestoraResourceService {
 
 	private UnidadeGestoraService unidadeGestoraService;
