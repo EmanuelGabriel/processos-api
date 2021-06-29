@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import br.com.meta.projetoapimeta.domain.dtos.response.ImageModelResponse;
 import br.com.meta.projetoapimeta.domain.entity.ImageModel;
 import br.com.meta.projetoapimeta.domain.mapper.ImageModelMapper;
 import br.com.meta.projetoapimeta.domain.repository.ImageModelRepository;
+import br.com.meta.projetoapimeta.services.exception.EntityNaoEncontradaException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,16 +54,52 @@ public class ImageModelControllerImpl {
 
 	}
 	
-	@GetMapping(value = "/get")
-	public ResponseEntity<ImageModelResponse> getImagem(@RequestParam(value = "nomeImagem") String nomeImagem) throws IOException {
-		final Optional<ImageModel> imageModelOpt = this.imageModelRepository.findByNome(nomeImagem);
-		
-		ImageModelInpuRequest request = new ImageModelInpuRequest(imageModelOpt.get().getId(), imageModelOpt.get().getNome(), imageModelOpt.get().getType(), decompressBytes(imageModelOpt.get().getImage()), imageModelOpt.get().getTamanho()); 
-		//new ImageModelInpuRequest(opt.get().getNome(), opt.get().getType(), decompressBytes(opt.get().getType().getBytes()), opt.get().getTamanho());
+	@GetMapping(value = "{idImagem}")
+	public ResponseEntity<ImageModelResponse> buscarPorID(@PathVariable Long idImagem) {
+		log.info("GET /v1/uploads/{}", idImagem);
+		Optional<ImageModel> imagemModelOpt = this.imageModelRepository.findById(idImagem);
+		if (!imagemModelOpt.isPresent()) {
+			throw new EntityNaoEncontradaException("Imagem de ID não encontrado");
+		}
+
+		ImageModelInpuRequest request = new ImageModelInpuRequest(imagemModelOpt.get().getId(),
+				imagemModelOpt.get().getNome(), imagemModelOpt.get().getType(),
+				decompressBytes(imagemModelOpt.get().getImage()), imagemModelOpt.get().getTamanho());
 		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
 		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
 		return ResponseEntity.ok().body(imageModelResponse);
+	}
+	
+	@GetMapping(value = "/get")
+	public ResponseEntity<ImageModelResponse> getImagem(@RequestParam(value = "nomeImagem") String nomeImagem) throws IOException {
+		final Optional<ImageModel> imageModelOpt = this.imageModelRepository.findByNome(nomeImagem);
+		if(!imageModelOpt.isPresent()) {
+			throw new EntityNaoEncontradaException("Imagem não encontrada");
+		}
 		
+		ImageModelInpuRequest request = new ImageModelInpuRequest(imageModelOpt.get().getId(), imageModelOpt.get().getNome(), imageModelOpt.get().getType(),
+				decompressBytes(imageModelOpt.get().getImage()), imageModelOpt.get().getTamanho());
+		// new ImageModelInpuRequest(opt.get().getNome(), opt.get().getType(),
+		// decompressBytes(opt.get().getType().getBytes()), opt.get().getTamanho());
+		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
+		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
+		return ResponseEntity.ok().body(imageModelResponse);
+
+	}
+	
+	@GetMapping(value = "/getTest/{nomeImagem}")
+	public ResponseEntity<ImageModelResponse> getImagemTest(@PathVariable String nomeImagem) throws IOException {
+		final Optional<ImageModel> imageModelOpt = this.imageModelRepository.findByNome(nomeImagem);
+		if(!imageModelOpt.isPresent()) {
+			throw new EntityNaoEncontradaException("Imagem não encontrada");
+		}
+		
+		ImageModelInpuRequest request = new ImageModelInpuRequest(imageModelOpt.get().getId(), imageModelOpt.get().getNome(), imageModelOpt.get().getType(),
+				decompressBytes(imageModelOpt.get().getImage()), imageModelOpt.get().getTamanho());
+		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
+		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
+		return ResponseEntity.ok().body(imageModelResponse);
+
 	}
 
 	// Comprimir os bytes da imagem antes de armazená-los no banco de dados
@@ -116,9 +154,9 @@ public class ImageModelControllerImpl {
 			outputStream.close();
 
 		} catch (IOException ioe) {
-				ioe.printStackTrace();
+			ioe.printStackTrace();
 		} catch (DataFormatException e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return outputStream.toByteArray();
