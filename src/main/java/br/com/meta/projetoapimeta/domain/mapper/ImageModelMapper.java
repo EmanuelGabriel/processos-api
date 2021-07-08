@@ -21,20 +21,22 @@ public class ImageModelMapper {
 	private ModelMapper modelMapper;
 
 	/**
-	 * Converte um objeto do tipo 'ImageModel' para um DTO
+	 * Método responsável por conversão de entidade em DTO
 	 * 
-	 * @param imageModel
-	 * @return imageModelResponse
+	 * @author emanuel.sousa
+	 * @param entity
+	 * @return dto
 	 */
-	public ImageModelResponse entityToDTO(ImageModel imageModel) {
-		return this.modelMapper.map(imageModel, ImageModelResponse.class);
+	public ImageModelResponse entityToDTO(ImageModel entity) {
+		return this.modelMapper.map(entity, ImageModelResponse.class);
 	}
 
 	/**
-	 * Converte um DTO para uma Entidade
+	 * Método responsável por conversão de DTO em entidade
 	 * 
-	 * @param dto
-	 * @return
+	 * @author emanuel.sousa
+	 * @param dto input
+	 * @return entity
 	 */
 	public ImageModel dtoToEntity(ImageModelInpuRequest dto) {
 		return this.modelMapper.map(dto, ImageModel.class);
@@ -43,6 +45,7 @@ public class ImageModelMapper {
 	/**
 	 * Converte um DTO para uma Entidade
 	 * 
+	 * @author emanuel.sousa
 	 * @param dto
 	 * @return
 	 */
@@ -51,7 +54,7 @@ public class ImageModelMapper {
 	}
 
 	/**
-	 * 
+	 * @author emanuel.sousa
 	 * @param List imageModels
 	 * @return List imageModelResponse
 	 */
@@ -64,7 +67,7 @@ public class ImageModelMapper {
 	}
 
 	/**
-	 * 
+	 * @author emanuel.sousa
 	 * @param pageable
 	 * @param pageImageModel
 	 * @return

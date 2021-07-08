@@ -24,17 +24,24 @@ public class ProcessoMapper {
 	private ImageModelMapper imageMapper;
 
 	/**
-	 * Converte uma entidade para um DTO
+	 * Método responsável por conversão de entidade em DTO
 	 * 
-	 * @param Recebe como parâmetro um Objeto do tipo 'Processo'
-	 * @return Objeto do tipo 'ProcessoModelResponse'
+	 * @author emanuel.sousa
+	 * @param entity
+	 * @return DTO
 	 */
-	public ProcessoModelResponse entityToDTO(Processo processo) {
-		ProcessoModelResponse dto = this.modelMapper.map(processo, ProcessoModelResponse.class);
-		dto.setImagensProcesso(this.imageMapper.listEntityToDTO(processo.getImages()));
+	public ProcessoModelResponse entityToDTO(Processo entity) {
+		ProcessoModelResponse dto = this.modelMapper.map(entity, ProcessoModelResponse.class);
+		dto.setImagensProcesso(this.imageMapper.listEntityToDTO(entity.getImages()));
 		return dto;
 	}
 
+	/**
+	 * Método responsável por conversão de DTO em entidade
+	 * @author emanuel.sousa
+	 * @param dto
+	 * @return entity
+	 */
 	public Processo dtoToEntity(ProcessoModelResponse dto) {
 		Processo processo = this.modelMapper.map(dto, Processo.class);
 		processo.setImages(this.imageMapper.listDtoToEntity(dto.getImagensProcesso()));
