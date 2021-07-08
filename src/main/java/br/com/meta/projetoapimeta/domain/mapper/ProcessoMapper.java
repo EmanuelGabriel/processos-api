@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,9 @@ public class ProcessoMapper {
 
 	private ModelMapper modelMapper;
 
+	@Autowired
+	private ImageModelMapper imageMapper;
+
 	/**
 	 * Converte uma entidade para um DTO
 	 * 
@@ -26,10 +30,14 @@ public class ProcessoMapper {
 	 * @return Objeto do tipo 'ProcessoModelResponse'
 	 */
 	public ProcessoModelResponse entityToDTO(Processo processo) {
-		return this.modelMapper.map(processo, ProcessoModelResponse.class);
+		ProcessoModelResponse dto = this.modelMapper.map(processo, ProcessoModelResponse.class);
+		dto.setImagensProcesso(this.imageMapper.listEntityToDTO(processo.getImages()));
+		return dto;
 	}
 
 	public Processo dtoToEntity(ProcessoModelResponse dto) {
+		Processo processo = this.modelMapper.map(dto, Processo.class);
+		processo.setImages(this.imageMapper.listDtoToEntity(dto.getImagensProcesso()));
 		return this.modelMapper.map(dto, Processo.class);
 	}
 

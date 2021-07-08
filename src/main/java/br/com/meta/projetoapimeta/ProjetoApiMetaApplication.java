@@ -9,6 +9,5 @@ public class ProjetoApiMetaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetoApiMetaApplication.class, args);
 	}
-	
 
 }

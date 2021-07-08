@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.meta.projetoapimeta.domain.dtos.request.ProcessoModelInputRequest;
 import br.com.meta.projetoapimeta.domain.dtos.response.ProcessoModelResponse;
+import br.com.meta.projetoapimeta.domain.entity.ImageModel;
 import br.com.meta.projetoapimeta.domain.entity.Processo;
 import br.com.meta.projetoapimeta.domain.entity.SituacaoProcesso;
 import br.com.meta.projetoapimeta.domain.enumerator.FaseProcesso;
 import br.com.meta.projetoapimeta.domain.mapper.ProcessoMapper;
+import br.com.meta.projetoapimeta.domain.repository.ImageModelRepository;
 import br.com.meta.projetoapimeta.domain.repository.ProcessoRepository;
 import br.com.meta.projetoapimeta.domain.repository.SituacaoProcessoRepository;
 import br.com.meta.projetoapimeta.services.exception.EntityNaoEncontradaException;
@@ -32,14 +34,19 @@ public class ProcessoService {
 	private static final String MSG_IMPOSSIVEL_REMOVER = "O processo não pode ser removido, pois está em uso";
 	private ProcessoRepository processoRepository;
 	private SituacaoProcessoRepository situacaoProcessoRepository;
+	private ImageModelRepository imageModelRepository;
 	private ProcessoMapper processoMapper;
 
 	@Transactional
 	public ProcessoModelResponse criar(ProcessoModelInputRequest request) {
 		log.info("Criar um processo {}", request);
 
-		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository
-				.findById(request.getSituacaoProcesso().getId());
+		Optional<ImageModel> imageModelOpt = imageModelRepository.findById(request.getImagem().getId());
+		if (!imageModelOpt.isPresent()) {
+			throw new EntityNaoEncontradaException("ID da imagem não encontrada");
+		}
+
+		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository.findById(request.getSituacaoProcesso().getId());
 		if (!situacaoProcessoId.isPresent()) {
 			throw new EntityNaoEncontradaException("Situação do processo não encontrada");
 		}
@@ -53,8 +60,19 @@ public class ProcessoService {
 		processo.setNumeroProtocolo(request.getNumeroProtocolo());
 		processo.setDataAtualizacaoProcesso(LocalDateTime.now());
 		processo.setSituacaoProcesso(situacaoProcessoId.get());
+		processo.getImages().add(imageModelOpt.get());
+	
+		adicionarAnexoImagemProcesso(processo);
 
-		return this.processoMapper.entityToDTO(this.processoRepository.saveAndFlush(processo));
+		return this.processoMapper.entityToDTO(this.processoRepository.save(processo));
+	}
+
+	private void adicionarAnexoImagemProcesso(Processo processo) {
+		if (!processo.getImages().isEmpty()) {
+			processo.getImages().forEach(anexo -> {
+				anexo.setProcesso(processo);
+			});
+		}
 	}
 
 	public ProcessoModelResponse buscarPorId(Long idProcesso) {

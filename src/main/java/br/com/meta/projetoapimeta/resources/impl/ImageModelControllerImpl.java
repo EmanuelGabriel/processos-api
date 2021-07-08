@@ -2,6 +2,7 @@ package br.com.meta.projetoapimeta.resources.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -9,7 +10,6 @@ import java.util.zip.Inflater;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "*")
 @Tag(name = "Upload de Imagens", description = "Recurso de Upload de Imagens")
 @Slf4j
 @AllArgsConstructor
@@ -43,18 +42,19 @@ public class ImageModelControllerImpl {
 	public ResponseEntity<ImageModelResponse> uploadImagem(@RequestParam("imageFile") MultipartFile file)
 			throws IOException {
 
-		log.info("POST /upload {}", file.getName().getBytes());
+		log.info("POST /upload {}", file.getOriginalFilename());
 
-		System.out.println("Tamanho original do byte da imagem - " + file.getBytes().length);
+		System.out.println("Byte/imagem - Original: " + file.getBytes().length);
 
-		ImageModelInpuRequest request = new ImageModelInpuRequest(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()), file.getSize());
+		ImageModelInpuRequest request = new ImageModelInpuRequest(file.getOriginalFilename(), file.getContentType(),
+				compressBytes(file.getBytes()), file.getSize());
 		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
-		
+
 		return ResponseEntity.ok().body(this.imageModelMapper.entityToDTO(imageModelRepository.save(imageModel)));
 
 	}
-	
-	@GetMapping(value = "{idImagem}")
+
+	@GetMapping(value = "{idImagem}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ImageModelResponse> buscarPorID(@PathVariable Long idImagem) {
 		log.info("GET /v1/uploads/{}", idImagem);
 		Optional<ImageModel> imagemModelOpt = this.imageModelRepository.findById(idImagem);
@@ -67,38 +67,44 @@ public class ImageModelControllerImpl {
 				decompressBytes(imagemModelOpt.get().getImage()), imagemModelOpt.get().getTamanho());
 		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
 		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
-		return ResponseEntity.ok().body(imageModelResponse);
+		return imageModelResponse != null ? ResponseEntity.ok().body(imageModelResponse)
+				: ResponseEntity.notFound().build();
 	}
-	
-	@GetMapping(value = "/get")
-	public ResponseEntity<ImageModelResponse> getImagem(@RequestParam(value = "nomeImagem") String nomeImagem) throws IOException {
-		final Optional<ImageModel> imageModelOpt = this.imageModelRepository.findByNome(nomeImagem);
-		if(!imageModelOpt.isPresent()) {
-			throw new EntityNaoEncontradaException("Imagem não encontrada");
-		}
-		
-		ImageModelInpuRequest request = new ImageModelInpuRequest(imageModelOpt.get().getId(), imageModelOpt.get().getNome(), imageModelOpt.get().getType(),
-				decompressBytes(imageModelOpt.get().getImage()), imageModelOpt.get().getTamanho());
-		// new ImageModelInpuRequest(opt.get().getNome(), opt.get().getType(),
-		// decompressBytes(opt.get().getType().getBytes()), opt.get().getTamanho());
-		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
-		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
-		return ResponseEntity.ok().body(imageModelResponse);
 
+	@GetMapping
+	public ResponseEntity<List<ImageModelResponse>> getAll() {
+		log.info("GET /v1/uploads");
+		List<ImageModel> listaImageModels = imageModelRepository.findAll();
+		return listaImageModels != null
+				? ResponseEntity.ok().body(this.imageModelMapper.listEntityToDTO(listaImageModels))
+				: ResponseEntity.ok().build();
 	}
-	
-	@GetMapping(value = "/getTest/{nomeImagem}")
-	public ResponseEntity<ImageModelResponse> getImagemTest(@PathVariable String nomeImagem) throws IOException {
-		final Optional<ImageModel> imageModelOpt = this.imageModelRepository.findByNome(nomeImagem);
-		if(!imageModelOpt.isPresent()) {
-			throw new EntityNaoEncontradaException("Imagem não encontrada");
+
+	@GetMapping(value = "por-type", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ImageModelResponse>> buscarImagemPorType(@RequestParam(value = "type") String type) {
+		log.info("GET /v1/uploads/por-type/{}", type);
+		List<ImageModel> listImageModel = this.imageModelRepository.findByType(type);
+		if (listImageModel.isEmpty()) {
+			throw new EntityNaoEncontradaException("Tipo de contentType da imagem não encontrado");
 		}
-		
-		ImageModelInpuRequest request = new ImageModelInpuRequest(imageModelOpt.get().getId(), imageModelOpt.get().getNome(), imageModelOpt.get().getType(),
-				decompressBytes(imageModelOpt.get().getImage()), imageModelOpt.get().getTamanho());
-		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
-		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
-		return ResponseEntity.ok().body(imageModelResponse);
+
+		List<ImageModelResponse> listImageModelResponse = this.imageModelMapper.listEntityToDTO(listImageModel);
+		return listImageModelResponse != null ? ResponseEntity.ok().body(listImageModelResponse)
+				: ResponseEntity.notFound().build();
+	}
+
+	@GetMapping(value = "/por-nome", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ImageModelResponse>> getImagemTest(@RequestParam(value = "nomeImagem") String nomeImagem)
+			throws IOException {
+		log.info("GET /v1/uploads/por-nome/{}", nomeImagem);
+		List<ImageModel> listImageModel = this.imageModelRepository.findByNomeIgnoreCaseContaining(nomeImagem);
+		if (listImageModel == null) {
+			throw new EntityNaoEncontradaException("Imagem de nome não encontrado");
+		}
+
+		List<ImageModelResponse> listEntityToDTO = this.imageModelMapper.listEntityToDTO(listImageModel);
+
+		return listEntityToDTO != null ? ResponseEntity.ok().body(listEntityToDTO) : ResponseEntity.notFound().build();
 
 	}
 
@@ -127,7 +133,7 @@ public class ImageModelControllerImpl {
 			outputStream.close();
 		} catch (IOException e) {
 		}
-		System.out.println("Tamanho do byte da imagem compactada - " + outputStream.toByteArray().length);
+		System.out.println("Byte/imagem compactada: " + outputStream.toByteArray().length);
 		return outputStream.toByteArray();
 	}
 

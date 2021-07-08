@@ -2,6 +2,7 @@ package br.com.meta.projetoapimeta.domain.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -66,8 +68,8 @@ public class Processo implements Serializable {
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "fk_situacao", nullable = false)
 	private SituacaoProcesso situacaoProcesso;
-	
-	@OneToMany
-	private List<ImageModel> images;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ImageModel> images = new ArrayList<>();
 
 }

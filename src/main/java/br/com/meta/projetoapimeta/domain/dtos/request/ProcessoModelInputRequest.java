@@ -22,4 +22,6 @@ public class ProcessoModelInputRequest {
 
 	private SituacaoProcessoModelCodigoResponse situacaoProcesso;
 
+	private ImageModelCodigoRequest imagem;
+
 }
