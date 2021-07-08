@@ -43,12 +43,13 @@ public class ProcessoService {
 
 		Optional<ImageModel> imageModelOpt = imageModelRepository.findById(request.getImagem().getId());
 		if (!imageModelOpt.isPresent()) {
-			throw new EntityNaoEncontradaException("ID da imagem não encontrada");
+			throw new EntityNaoEncontradaException("ID da imagem não encontrado");
 		}
 
-		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository.findById(request.getSituacaoProcesso().getId());
+		Optional<SituacaoProcesso> situacaoProcessoId = this.situacaoProcessoRepository
+				.findById(request.getSituacaoProcesso().getId());
 		if (!situacaoProcessoId.isPresent()) {
-			throw new EntityNaoEncontradaException("Situação do processo não encontrada");
+			throw new EntityNaoEncontradaException("Situação do processo não encontrado");
 		}
 
 		Processo processo = new Processo();
@@ -61,7 +62,7 @@ public class ProcessoService {
 		processo.setDataAtualizacaoProcesso(LocalDateTime.now());
 		processo.setSituacaoProcesso(situacaoProcessoId.get());
 		processo.getImages().add(imageModelOpt.get());
-	
+
 		adicionarAnexoImagemProcesso(processo);
 
 		return this.processoMapper.entityToDTO(this.processoRepository.save(processo));
@@ -69,8 +70,8 @@ public class ProcessoService {
 
 	private void adicionarAnexoImagemProcesso(Processo processo) {
 		if (!processo.getImages().isEmpty()) {
-			processo.getImages().forEach(anexo -> {
-				anexo.setProcesso(processo);
+			processo.getImages().forEach(imagem -> {
+				imagem.setProcesso(processo);
 			});
 		}
 	}
