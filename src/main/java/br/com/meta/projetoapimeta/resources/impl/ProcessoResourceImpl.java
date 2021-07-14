@@ -32,9 +32,9 @@ public class ProcessoResourceImpl implements ProcessoResourceService {
 
 	private ProcessoService processoService;
 
+	@Override
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	@Override
 	public ResponseEntity<ProcessoModelResponse> criar(@RequestBody ProcessoModelInputRequest request) {
 		log.info("POST /v1/processos {}", request);
 		ProcessoModelResponse response = this.processoService.criar(request);
@@ -42,16 +42,16 @@ public class ProcessoResourceImpl implements ProcessoResourceService {
 		return ResponseEntity.created(location).build();
 	}
 
-	@GetMapping
 	@Override
+	@GetMapping
 	public ResponseEntity<Page<ProcessoModelResponse>> getAll() {
 		log.info("GET /v1/processos");
 		Page<ProcessoModelResponse> processos = this.processoService.getAll();
 		return processos != null ? ResponseEntity.ok(processos) : ResponseEntity.ok().build();
 	}
 
-	@GetMapping(value = "{idProcesso}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Override
+	@GetMapping(value = "{idProcesso}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProcessoModelResponse> buscarPorId(@PathVariable Long idProcesso) {
 		log.info("GET /v1/processos/{} ", idProcesso);
 		return ResponseEntity.ok(this.processoService.buscarPorId(idProcesso));
