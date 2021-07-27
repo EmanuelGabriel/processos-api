@@ -46,8 +46,7 @@ public class ImageModelControllerImpl {
 
 		System.out.println("Byte/imagem - Original: " + file.getBytes().length);
 
-		ImageModelInpuRequest request = new ImageModelInpuRequest(file.getOriginalFilename(), file.getContentType(),
-				compressBytes(file.getBytes()), file.getSize());
+		ImageModelInpuRequest request = new ImageModelInpuRequest(file.getOriginalFilename(), file.getContentType(), comprimirBytes(file.getBytes()), file.getSize());
 		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
 
 		return ResponseEntity.ok().body(this.imageModelMapper.entityToDTO(imageModelRepository.save(imageModel)));
@@ -63,8 +62,7 @@ public class ImageModelControllerImpl {
 		}
 
 		ImageModelInpuRequest request = new ImageModelInpuRequest(imagemModelOpt.get().getId(),
-				imagemModelOpt.get().getNome(), imagemModelOpt.get().getType(),
-				decompressBytes(imagemModelOpt.get().getImage()), imagemModelOpt.get().getTamanho());
+				imagemModelOpt.get().getNome(), imagemModelOpt.get().getType(), descompactarBytes(imagemModelOpt.get().getImage()), imagemModelOpt.get().getTamanho());
 		ImageModel imageModel = this.imageModelMapper.dtoToEntity(request);
 		ImageModelResponse imageModelResponse = this.imageModelMapper.entityToDTO(imageModel);
 		return imageModelResponse != null ? ResponseEntity.ok().body(imageModelResponse)
@@ -109,7 +107,7 @@ public class ImageModelControllerImpl {
 	}
 
 	// Comprimir os bytes da imagem antes de armazená-los no banco de dados
-	public static byte[] compressBytes(byte[] dados) {
+	private static byte[] comprimirBytes(byte[] dados) {
 
 		Deflater deflater = new Deflater();
 
@@ -138,7 +136,7 @@ public class ImageModelControllerImpl {
 	}
 
 	// Descompacte os bytes da imagem antes de retorná-los ao aplicativo Angular
-	public static byte[] decompressBytes(byte[] data) {
+	private static byte[] descompactarBytes(byte[] data) {
 		Inflater inflater = new Inflater();
 
 		inflater.setInput(data);
